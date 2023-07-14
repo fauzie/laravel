@@ -1,0 +1,30 @@
+EDITOR=nano
+PATH=$PATH:/app/.npm/bin:/app/.composer/vendor/bin
+ARTISAN_CMDS_FILE=/app/current/bootstrap/cache/cmds.txt
+
+# get current branch in git repo
+function parse_git_branch() {
+	BRANCH=`git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/\1/'`
+	if [ ! "${BRANCH}" == "" ]
+	then
+		echo "(${BRANCH})"
+	else
+		echo ""
+	fi
+}
+
+# artisan auto complete
+function _artisan() {
+    COMP_WORDBREAKS=${COMP_WORDBREAKS//:}
+    if [ -f "$ARTISAN_CMDS_FILE" ]; then
+        COMMANDS=$(cat "$ARTISAN_CMDS_FILE")
+    else
+        COMMANDS=$(php /app/current/artisan --raw --no-ansi list | awk '{print $1}')
+    fi
+    COMPREPLY=(`compgen -W "$COMMANDS" -- "${COMP_WORDS[COMP_CWORD]}"`)
+    return 0
+}
+
+PS1="\[\e[01;31m\]\h\[\e[m\]@\[\e[01;32m\]\u\[\e[m\] \[\e[36m\]\w\[\e[m\] \[\e[33m\]\`parse_git_branch\`\[\e[m\]\n\\$ "
+
+complete -F _artisan artisan

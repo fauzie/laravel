@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+PHP=$(which php)
+
+if [[ ! -f "${HOME}/current/artisan" ]]; then
+    echo "${HOME}/current/artisan not exist!"
+    exit 1
+fi
+
+$PHP -d memory_limit=-1 $HOME/current/artisan "$@"
