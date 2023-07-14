@@ -13,12 +13,11 @@ variables:
 before_script:
   - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD registry.gitlab.com
 
-idhome:
+build:
   stage: build
   script:
-    - docker pull $CONTAINER_IMAGE:latest || true
-    - docker build --cache-from $CONTAINER_IMAGE:latest --tag $CONTAINER_IMAGE:$CI_BUILD_REF --tag $CONTAINER_IMAGE:latest .
-    - docker push $CONTAINER_IMAGE:$CI_BUILD_REF
+#    - docker pull $CONTAINER_IMAGE:latest || true
+    - docker build --tag $CONTAINER_IMAGE:latest .
     - docker push $CONTAINER_IMAGE:latest
   only:
     - main
