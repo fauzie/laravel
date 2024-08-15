@@ -2,7 +2,7 @@ FROM    php:8.2-fpm-alpine
 
 LABEL	maintainer="Rizal Fauzie Ridwan <rizal@fauzie.id>"
 
-ENV     DOMAIN=$DOCKER_HOST \
+ENV     DOMAIN=localhost \
         HOME=/app \
         TZ=Asia/Jakarta \
         REAL_IP_FROM=10.0.0.0/16 \
