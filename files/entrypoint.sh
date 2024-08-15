@@ -10,6 +10,7 @@ if [[ ! -f /etc/.setupdone ]]; then
 	addgroup -g 1000 $USERGROUP
 	adduser -D -u 1000 -h /app -s /bin/bash -G $USERGROUP $USERNAME
 	echo "${USERNAME}:${RANDPASS}" | chpasswd &> /dev/null
+	[ -d "/app/logs" ] || mkdir -p /app/logs
 	echo " "
 
 	if [[ ! -f /usr/local/bin/composer ]]; then
@@ -28,9 +29,11 @@ if [[ ! -f /etc/.setupdone ]]; then
 	echo " SETUP NGINX"
 	echo "=========================================================="
 	mkdir -p /var/cache/nginx
+	mkdir -p /app/logs/nginx
 	chown -R $USERNAME:$USERGROUP /var/lib/nginx
 	chown -R $USERNAME:$USERGROUP /var/log/nginx
 	chown -R $USERNAME:$USERGROUP /var/cache/nginx
+	chown -R $USERNAME:$USERGROUP /app/logs/nginx
 	echo "Creating nginx.conf from template..."
 	sed -ri "s|USERNAME|${USERNAME}|g" /etc/nginx/nginx.conf
     sed -ri "s|DOMAIN|${DOMAIN}|g" /etc/nginx/nginx.conf
@@ -43,7 +46,9 @@ if [[ ! -f /etc/.setupdone ]]; then
 	echo " SETUP PHP"
 	echo "=========================================================="
 	mkdir -p /var/lib/php
+	mkdir -p /app/logs/php
 	chown -R $USERNAME:$USERGROUP /var/lib/php
+	chown -R $USERNAME:$USERGROUP /app/logs/php
 	rm /usr/local/etc/php-fpm.d/*.conf
     cp /template/www.conf /usr/local/etc/php-fpm.d/www.conf
 
@@ -87,8 +92,6 @@ if [[ ! -f /etc/.setupdone ]]; then
 	npm config set prefix '/app/.npm'
     export PATH=/app/.npm/bin:$PATH
 
-    [ -d "/app/logs" ] || mkdir -p /app/logs
-
 	cp /template/userprofile /app/.bashrc
 	echo ". ~/.bashrc" > /app/.profile
 	chown -R $USERNAME:$USERGROUP /app/.bashrc
@@ -109,7 +112,7 @@ if [[ ! -f /etc/.setupdone ]]; then
         sed -i '97,112d' /etc/supervisord.conf
     fi
 
-    if [[ -z "${USE_WEBSOCKET}" ]]; then
+    if [[ -z "${USE_REVERB}" ]]; then
         sed -i '82,96d' /etc/supervisord.conf
     fi
 

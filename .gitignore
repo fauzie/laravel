@@ -67,6 +67,3 @@ Temporary Items
 
 files/usr/local/bin/*
 !files/usr/local/bin/artisan
-!files/usr/local/bin/deployer
-files/etc/GeoLite2-City.mmdb
-files/etc/GeoLite2-Country.mmdb
