@@ -44,4 +44,4 @@ RUN     chmod +x /entrypoint.sh; \
         rm -rf /tmp/*
 
 WORKDIR /app
-ENTRYPOINT /entrypoint.sh
+ENTRYPOINT ["/entrypoint.sh"]
